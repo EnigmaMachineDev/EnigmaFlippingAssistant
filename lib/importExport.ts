@@ -5,19 +5,62 @@ import { ExportDataSchema } from "./schema";
 import { nowISO } from "./format";
 import type { Item, Evaluation, Settings, ExportData } from "./types";
 
-export async function exportJSON(
+// ─── Pure functions (no native deps — testable) ──────────────────────────────
+
+export function buildExportData(
   items: Item[],
   evaluations: Evaluation[],
   settings: Settings
-): Promise<void> {
-  const data: ExportData = {
+): ExportData {
+  return {
     schemaVersion: 1,
     exportedAt: nowISO(),
     items,
     evaluations,
     settings,
   };
-  const json = JSON.stringify(data, null, 2);
+}
+
+export function serializeExport(data: ExportData): string {
+  return JSON.stringify(data, null, 2);
+}
+
+export function parseImportJSON(text: string): ImportPreview {
+  try {
+    const parsed = JSON.parse(text);
+    const validated = ExportDataSchema.safeParse(parsed);
+    if (!validated.success) {
+      return {
+        items: 0,
+        evaluations: 0,
+        valid: false,
+        error: "Invalid file format: " + validated.error.issues[0]?.message,
+      };
+    }
+    return {
+      items: validated.data.items.length,
+      evaluations: validated.data.evaluations.length,
+      valid: true,
+      data: validated.data,
+    };
+  } catch (e: unknown) {
+    return {
+      items: 0,
+      evaluations: 0,
+      valid: false,
+      error: e instanceof Error ? e.message : "Failed to parse file",
+    };
+  }
+}
+
+// ─── Native wrappers ─────────────────────────────────────────────────────────
+
+export async function exportJSON(
+  items: Item[],
+  evaluations: Evaluation[],
+  settings: Settings
+): Promise<void> {
+  const json = serializeExport(buildExportData(items, evaluations, settings));
   const filename = `flip-ledger-backup-${new Date().toISOString().slice(0, 10)}.json`;
   const path = `${FileSystem.cacheDirectory}${filename}`;
   await FileSystem.writeAsStringAsync(path, json, {
@@ -108,28 +151,13 @@ export async function readImportFile(): Promise<ImportPreview> {
     const text = await FileSystem.readAsStringAsync(result.assets[0].uri, {
       encoding: FileSystem.EncodingType.UTF8,
     });
-    const parsed = JSON.parse(text);
-    const validated = ExportDataSchema.safeParse(parsed);
-    if (!validated.success) {
-      return {
-        items: 0,
-        evaluations: 0,
-        valid: false,
-        error: "Invalid file format: " + validated.error.issues[0]?.message,
-      };
-    }
-    return {
-      items: validated.data.items.length,
-      evaluations: validated.data.evaluations.length,
-      valid: true,
-      data: validated.data,
-    };
+    return parseImportJSON(text);
   } catch (e: unknown) {
     return {
       items: 0,
       evaluations: 0,
       valid: false,
-      error: e instanceof Error ? e.message : "Failed to parse file",
+      error: e instanceof Error ? e.message : "Failed to read file",
     };
   }
 }
