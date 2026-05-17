@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2025-06-01T12:00:00.000Z",
+  "items": [
+    {
+      "id": "sample-item-1",
+      "kind": "flip",
+      "title": "1978 Fender Stratocaster",
+      "category": "Guitar",
+      "tags": ["vintage", "electric", "fender"],
+      "status": "sold",
+      "photos": [],
+      "purchasePrice": 450,
+      "acquiredAt": "2025-03-15T00:00:00.000Z",
+      "source": "Estate Sale",
+      "costs": [
+        {
+          "id": "cost-1",
+          "label": "New pickguard",
+          "amount": 25,
+          "kind": "materials",
+          "addedAt": "2025-03-16T00:00:00.000Z"
+        },
+        {
+          "id": "cost-2",
+          "label": "Setup & fret level",
+          "amount": 75,
+          "kind": "labor",
+          "addedAt": "2025-03-16T00:00:00.000Z"
+        }
+      ],
+      "listedAt": "2025-03-20T00:00:00.000Z",
+      "listedPrice": 900,
+      "listedPlatform": "reverb",
+      "soldAt": "2025-04-02T00:00:00.000Z",
+      "soldPrice": 875,
+      "soldPlatform": "reverb",
+      "comps": [
+        {
+          "id": "comp-1",
+          "description": "Similar 1978 Strat on Reverb - sold",
+          "price": 950,
+          "addedAt": "2025-03-15T00:00:00.000Z"
+        }
+      ],
+      "notes": "Sunburst finish, all original except pickguard.",
+      "createdAt": "2025-03-15T00:00:00.000Z",
+      "updatedAt": "2025-04-02T00:00:00.000Z"
+    },
+    {
+      "id": "sample-item-2",
+      "kind": "build",
+      "title": "Walnut Charcuterie Board",
+      "category": "Woodwork",
+      "tags": ["walnut", "handmade", "kitchen"],
+      "status": "listed",
+      "photos": [],
+      "costs": [
+        {
+          "id": "cost-3",
+          "label": "Walnut slab",
+          "amount": 18,
+          "kind": "materials",
+          "addedAt": "2025-05-01T00:00:00.000Z"
+        },
+        {
+          "id": "cost-4",
+          "label": "Finish supplies",
+          "amount": 8,
+          "kind": "materials",
+          "addedAt": "2025-05-01T00:00:00.000Z"
+        }
+      ],
+      "listedAt": "2025-05-10T00:00:00.000Z",
+      "listedPrice": 75,
+      "listedPlatform": "etsy",
+      "comps": [],
+      "createdAt": "2025-05-01T00:00:00.000Z",
+      "updatedAt": "2025-05-10T00:00:00.000Z"
+    }
+  ],
+  "evaluations": [
+    {
+      "id": "sample-eval-1",
+      "title": "1965 Silvertone 1457 w/ amp-in-case",
+      "category": "Guitar",
+      "photos": [],
+      "source": "Facebook Marketplace",
+      "listingUrl": "",
+      "askingPrice": 200,
+      "estimatedSalePrice": 380,
+      "estimatedRefurbCost": 30,
+      "estimatedLaborHours": 2,
+      "intendedSellPlatform": "reverb",
+      "comps": [
+        {
+          "id": "comp-eval-1",
+          "description": "Sold Silvertone 1457 on Reverb",
+          "price": 395,
+          "addedAt": "2025-05-15T00:00:00.000Z"
+        }
+      ],
+      "offers": [
+        {
+          "id": "offer-1",
+          "by": "seller",
+          "amount": 200,
+          "at": "2025-05-15T10:00:00.000Z",
+          "note": "Original ask"
+        },
+        {
+          "id": "offer-2",
+          "by": "me",
+          "amount": 150,
+          "at": "2025-05-15T10:30:00.000Z",
+          "note": "Countered based on refurb needed"
+        }
+      ],
+      "outcome": "pending",
+      "createdAt": "2025-05-15T00:00:00.000Z",
+      "updatedAt": "2025-05-15T00:00:00.000Z"
+    }
+  ],
+  "settings": {
+    "currency": "USD",
+    "minProfitFloor": 50,
+    "targetMarginPct": 40,
+    "hourlyLaborRate": 25,
+    "platformFees": [
+      { "id": "reverb", "name": "Reverb", "percent": 5, "flatFee": 0 },
+      { "id": "ebay", "name": "eBay", "percent": 13.25, "flatFee": 0 },
+      { "id": "facebook", "name": "Facebook Marketplace", "percent": 0, "flatFee": 0 },
+      { "id": "local", "name": "Local / Cash", "percent": 0, "flatFee": 0 },
+      { "id": "etsy", "name": "Etsy", "percent": 6.5, "flatFee": 0.2 },
+      { "id": "craigslist", "name": "Craigslist", "percent": 0, "flatFee": 0 }
+    ],
+    "defaultPlatform": "facebook",
+    "remindAfterListedDays": 30,
+    "theme": "dark",
+    "schemaVersion": 1
+  }
+}
