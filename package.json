@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "test": "jest",
-    "build:local": "eas build --local --profile preview --platform android"
+    "build:local": "eas build --local --profile preview --platform android",
+    "postinstall": "bash scripts/patch-hermesc-arm64.sh"
   },
   "jest": {
     "preset": "ts-jest",
