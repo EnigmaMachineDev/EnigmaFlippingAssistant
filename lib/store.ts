@@ -52,10 +52,32 @@ export const useStore = create<AppState>((set, get) => ({
       StorageService.markInitialized();
     }
 
+    const storedSettings = StorageService.getSettings();
+    const mergedSettings: Settings = storedSettings
+      ? { ...DEFAULT_SETTINGS, ...storedSettings }
+      : DEFAULT_SETTINGS;
+
+    const rawItems = StorageService.getItems();
+    const normalizedItems = rawItems.map((item) => ({
+      ...item,
+      costs: item.costs ?? [],
+      comps: item.comps ?? [],
+      tags: item.tags ?? [],
+      photos: item.photos ?? [],
+    }));
+
+    const rawEvaluations = StorageService.getEvaluations();
+    const normalizedEvaluations = rawEvaluations.map((ev) => ({
+      ...ev,
+      comps: ev.comps ?? [],
+      offers: ev.offers ?? [],
+      photos: ev.photos ?? [],
+    }));
+
     set({
-      items: StorageService.getItems(),
-      evaluations: StorageService.getEvaluations(),
-      settings: StorageService.getSettings() ?? DEFAULT_SETTINGS,
+      items: normalizedItems,
+      evaluations: normalizedEvaluations,
+      settings: mergedSettings,
       initialized: true,
     });
   },

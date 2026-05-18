@@ -290,7 +290,7 @@ export default function ItemDetailScreen() {
                 />
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View className="flex-row gap-2">
-                    {settings.platformFees.map((p) => (
+                    {(settings.platformFees ?? []).map((p) => (
                       <Pressable
                         key={p.id}
                         onPress={() => setSoldPlatform(p.id)}

@@ -150,7 +150,7 @@ export default function NewEvaluationScreen() {
             <CardContent>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex-row gap-2">
-                  {settings.platformFees.map((p) => (
+                  {(settings.platformFees ?? []).map((p) => (
                     <Pressable
                       key={p.id}
                       onPress={() => setPlatform(p.id)}

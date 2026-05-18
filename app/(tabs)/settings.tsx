@@ -230,7 +230,7 @@ export default function SettingsScreen() {
       >
         <Card className="mx-4">
           <CardContent className="pt-4 gap-2">
-            {settings.platformFees.map((fee) => (
+            {(settings.platformFees ?? []).map((fee) => (
               <View key={fee.id}>
                 {editingFee?.id === fee.id ? (
                   <FeeEditor

@@ -18,7 +18,7 @@ export function findPlatformFee(
   settings: Settings,
   platformId?: string
 ): PlatformFee {
-  const found = settings.platformFees.find(
+  const found = (settings.platformFees ?? []).find(
     (p) => p.id === platformId || p.name === platformId
   );
   return found ?? { id: "", name: "", percent: 0, flatFee: 0 };
