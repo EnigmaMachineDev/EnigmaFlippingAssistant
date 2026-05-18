@@ -30,10 +30,8 @@ export default function ItemDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const item = useItem(id);
-  const { updateItem, deleteItem } = useStore((s) => ({
-    updateItem: s.updateItem,
-    deleteItem: s.deleteItem,
-  }));
+  const updateItem = useStore((s) => s.updateItem);
+  const deleteItem = useStore((s) => s.deleteItem);
   const settings = useSettings();
 
   const [showAddCost, setShowAddCost] = useState(false);

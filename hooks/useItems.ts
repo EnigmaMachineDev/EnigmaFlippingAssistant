@@ -24,9 +24,8 @@ export function useActiveItems() {
 }
 
 export function useItemActions() {
-  return useStore((s) => ({
-    addItem: s.addItem,
-    updateItem: s.updateItem,
-    deleteItem: s.deleteItem,
-  }));
+  const addItem = useStore((s) => s.addItem);
+  const updateItem = useStore((s) => s.updateItem);
+  const deleteItem = useStore((s) => s.deleteItem);
+  return { addItem, updateItem, deleteItem };
 }

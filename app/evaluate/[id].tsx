@@ -25,11 +25,9 @@ export default function EvaluationDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const evaluation = useEvaluation(id);
-  const { updateEvaluation, deleteEvaluation, addItem } = useStore((s) => ({
-    updateEvaluation: s.updateEvaluation,
-    deleteEvaluation: s.deleteEvaluation,
-    addItem: s.addItem,
-  }));
+  const updateEvaluation = useStore((s) => s.updateEvaluation);
+  const deleteEvaluation = useStore((s) => s.deleteEvaluation);
+  const addItem = useStore((s) => s.addItem);
   const settings = useSettings();
 
   const [showAddOffer, setShowAddOffer] = useState(false);

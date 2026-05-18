@@ -5,5 +5,6 @@ export function useSettings() {
 }
 
 export function useSettingsActions() {
-  return useStore((s) => ({ updateSettings: s.updateSettings }));
+  const updateSettings = useStore((s) => s.updateSettings);
+  return { updateSettings };
 }

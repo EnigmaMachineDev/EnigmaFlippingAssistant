@@ -16,10 +16,8 @@ import type { Evaluation } from "@/lib/types";
 
 export default function NewEvaluationScreen() {
   const router = useRouter();
-  const { addEvaluation, addItem } = useStore((s) => ({
-    addEvaluation: s.addEvaluation,
-    addItem: s.addItem,
-  }));
+  const addEvaluation = useStore((s) => s.addEvaluation);
+  const addItem = useStore((s) => s.addItem);
   const settings = useSettings();
 
   const [title, setTitle] = useState("");

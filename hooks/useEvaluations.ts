@@ -13,9 +13,8 @@ export function usePendingEvaluations() {
 }
 
 export function useEvaluationActions() {
-  return useStore((s) => ({
-    addEvaluation: s.addEvaluation,
-    updateEvaluation: s.updateEvaluation,
-    deleteEvaluation: s.deleteEvaluation,
-  }));
+  const addEvaluation = useStore((s) => s.addEvaluation);
+  const updateEvaluation = useStore((s) => s.updateEvaluation);
+  const deleteEvaluation = useStore((s) => s.deleteEvaluation);
+  return { addEvaluation, updateEvaluation, deleteEvaluation };
 }
