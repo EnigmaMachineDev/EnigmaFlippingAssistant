@@ -29,6 +29,16 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraGradleProperties": {
+              "reactNativeArchitectures": "arm64-v8a"
+            }
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
