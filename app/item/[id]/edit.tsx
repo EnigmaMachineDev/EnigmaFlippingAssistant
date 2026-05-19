@@ -32,6 +32,9 @@ export default function EditItemScreen() {
   const [soldPrice, setSoldPrice] = useState(item?.soldPrice ? String(item.soldPrice) : "");
   const [soldPlatform, setSoldPlatform] = useState(item?.soldPlatform ?? settings.defaultPlatform ?? "");
   const [soldAt, setSoldAt] = useState(item?.soldAt?.slice(0, 10) ?? "");
+  const [targetMarginPct, setTargetMarginPct] = useState(
+    item?.targetMarginPct != null ? String(item.targetMarginPct) : ""
+  );
   const [notes, setNotes] = useState(item?.notes ?? "");
   const [error, setError] = useState("");
 
@@ -59,6 +62,7 @@ export default function EditItemScreen() {
       soldPrice: soldPrice ? parseFloat(soldPrice) : undefined,
       soldPlatform: soldPlatform || undefined,
       soldAt: soldAt || undefined,
+      targetMarginPct: targetMarginPct ? parseFloat(targetMarginPct) : undefined,
       notes: notes.trim() || undefined,
     });
     router.back();
@@ -67,7 +71,7 @@ export default function EditItemScreen() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-background"
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View className="px-4 pt-6 gap-4">
@@ -130,6 +134,19 @@ export default function EditItemScreen() {
               </CardContent>
             </Card>
           ) : null}
+
+          <Card>
+            <CardHeader><CardTitle>Pricing Override</CardTitle></CardHeader>
+            <CardContent className="gap-4">
+              <Input
+                label={`Target Margin % (default: ${settings.targetMarginPct}%)`}
+                keyboardType="numeric"
+                value={targetMarginPct}
+                onChangeText={setTargetMarginPct}
+                placeholder={`${settings.targetMarginPct} (from settings)`}
+              />
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader><CardTitle>Notes</CardTitle></CardHeader>

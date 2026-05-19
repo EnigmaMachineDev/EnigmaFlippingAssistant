@@ -14,6 +14,7 @@ export const DEFAULT_SETTINGS: Settings = {
     { id: "craigslist", name: "Craigslist", percent: 0, flatFee: 0 },
   ],
   defaultPlatform: "facebook",
+  defaultBuyPctOfRetail: 40,
   remindAfterListedDays: 30,
   theme: "dark",
   schemaVersion: 1,

@@ -46,6 +46,8 @@ export interface Item {
 
   comps: CompEntry[];
 
+  targetMarginPct?: number;
+
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -68,6 +70,9 @@ export interface Evaluation {
   listingUrl?: string;
 
   askingPrice: number;
+
+  retailPrice?: number;
+  targetBuyPctOfRetail?: number;
 
   estimatedSalePrice: number;
   estimatedRefurbCost: number;
@@ -100,6 +105,7 @@ export interface Settings {
   platformFees: PlatformFee[];
   defaultPlatform?: string;
   monthlyProfitGoal?: number;
+  defaultBuyPctOfRetail: number;
   remindAfterListedDays: number;
   theme: "dark";
   schemaVersion: number;

@@ -21,6 +21,7 @@ const baseSettings: Settings = {
     { id: "ebay", name: "eBay", percent: 13.25, flatFee: 0 },
   ],
   defaultPlatform: "local",
+  defaultBuyPctOfRetail: 40,
   remindAfterListedDays: 30,
   theme: "dark",
   schemaVersion: 1,

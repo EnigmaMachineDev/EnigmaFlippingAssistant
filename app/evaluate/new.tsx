@@ -24,6 +24,8 @@ export default function NewEvaluationScreen() {
   const [source, setSource] = useState("");
   const [listingUrl, setListingUrl] = useState("");
   const [askingPrice, setAskingPrice] = useState("");
+  const [retailPrice, setRetailPrice] = useState("");
+  const [buyPctOfRetail, setBuyPctOfRetail] = useState("");
   const [estimatedSalePrice, setEstimatedSalePrice] = useState("");
   const [estimatedRefurbCost, setEstimatedRefurbCost] = useState("0");
   const [estimatedLaborHours, setEstimatedLaborHours] = useState("0");
@@ -32,14 +34,19 @@ export default function NewEvaluationScreen() {
 
   const partialEval: Evaluation | null = useMemo(() => {
     const asking = parseFloat(askingPrice);
+    const retail = parseFloat(retailPrice);
     const sale = parseFloat(estimatedSalePrice);
-    if (isNaN(asking) || isNaN(sale) || !title.trim()) return null;
+    const hasRetail = !isNaN(retail) && retail > 0;
+    const hasSale = !isNaN(sale) && sale > 0;
+    if (isNaN(asking) || !title.trim() || (!hasRetail && !hasSale)) return null;
     return {
       id: "preview",
       title: title.trim(),
       photos: [],
       askingPrice: asking,
-      estimatedSalePrice: sale,
+      retailPrice: hasRetail ? retail : undefined,
+      targetBuyPctOfRetail: buyPctOfRetail ? parseFloat(buyPctOfRetail) : undefined,
+      estimatedSalePrice: hasSale ? sale : 0,
       estimatedRefurbCost: parseFloat(estimatedRefurbCost) || 0,
       estimatedLaborHours: parseFloat(estimatedLaborHours) || 0,
       intendedSellPlatform: platform,
@@ -49,7 +56,7 @@ export default function NewEvaluationScreen() {
       createdAt: nowISO(),
       updatedAt: nowISO(),
     };
-  }, [title, askingPrice, estimatedSalePrice, estimatedRefurbCost, estimatedLaborHours, platform]);
+  }, [title, askingPrice, retailPrice, buyPctOfRetail, estimatedSalePrice, estimatedRefurbCost, estimatedLaborHours, platform]);
 
   const verdict = useMemo(
     () => (partialEval ? getBuyVerdict(partialEval, settings) : null),
@@ -59,8 +66,12 @@ export default function NewEvaluationScreen() {
   const handleSaveProspect = () => {
     if (!title.trim()) { setError("Title required"); return; }
     const asking = parseFloat(askingPrice);
+    const retail = parseFloat(retailPrice);
     const sale = parseFloat(estimatedSalePrice);
-    if (isNaN(asking) || isNaN(sale)) { setError("Enter asking and estimated sale prices"); return; }
+    const hasRetail = !isNaN(retail) && retail > 0;
+    const hasSale = !isNaN(sale) && sale > 0;
+    if (isNaN(asking)) { setError("Enter asking price"); return; }
+    if (!hasRetail && !hasSale) { setError("Enter retail price or estimated sale price"); return; }
     setError("");
     addEvaluation({
       title: title.trim(),
@@ -68,7 +79,9 @@ export default function NewEvaluationScreen() {
       listingUrl: listingUrl.trim() || undefined,
       photos: [],
       askingPrice: asking,
-      estimatedSalePrice: sale,
+      retailPrice: hasRetail ? retail : undefined,
+      targetBuyPctOfRetail: buyPctOfRetail ? parseFloat(buyPctOfRetail) : undefined,
+      estimatedSalePrice: hasSale ? sale : 0,
       estimatedRefurbCost: parseFloat(estimatedRefurbCost) || 0,
       estimatedLaborHours: parseFloat(estimatedLaborHours) || 0,
       intendedSellPlatform: platform,
@@ -82,7 +95,10 @@ export default function NewEvaluationScreen() {
   const handleBoughtIt = () => {
     if (!title.trim()) { setError("Title required"); return; }
     const asking = parseFloat(askingPrice);
+    const retail = parseFloat(retailPrice);
     const sale = parseFloat(estimatedSalePrice);
+    const hasRetail = !isNaN(retail) && retail > 0;
+    const hasSale = !isNaN(sale) && sale > 0;
     if (isNaN(asking)) { setError("Enter asking price"); return; }
     setError("");
     const ev = addEvaluation({
@@ -91,7 +107,9 @@ export default function NewEvaluationScreen() {
       listingUrl: listingUrl.trim() || undefined,
       photos: [],
       askingPrice: asking,
-      estimatedSalePrice: isNaN(sale) ? asking : sale,
+      retailPrice: hasRetail ? retail : undefined,
+      targetBuyPctOfRetail: buyPctOfRetail ? parseFloat(buyPctOfRetail) : undefined,
+      estimatedSalePrice: hasSale ? sale : 0,
       estimatedRefurbCost: parseFloat(estimatedRefurbCost) || 0,
       estimatedLaborHours: parseFloat(estimatedLaborHours) || 0,
       intendedSellPlatform: platform,
@@ -122,7 +140,7 @@ export default function NewEvaluationScreen() {
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-background"
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={{ paddingBottom: 140 }}>
         <View className="px-4 pt-6 gap-4">
@@ -139,7 +157,15 @@ export default function NewEvaluationScreen() {
             <CardHeader><CardTitle>Numbers</CardTitle></CardHeader>
             <CardContent className="gap-4">
               <Input label="Asking Price ($) *" keyboardType="numeric" prefix="$" value={askingPrice} onChangeText={setAskingPrice} placeholder="150" />
-              <Input label="Estimated Sale Price ($) *" keyboardType="numeric" prefix="$" value={estimatedSalePrice} onChangeText={setEstimatedSalePrice} placeholder="300" />
+              <Input label="Retail Price ($)" keyboardType="numeric" prefix="$" value={retailPrice} onChangeText={setRetailPrice} placeholder="200" />
+              <Input
+                label={`Buy target % of retail (default: ${settings.defaultBuyPctOfRetail}%)`}
+                keyboardType="numeric"
+                value={buyPctOfRetail}
+                onChangeText={setBuyPctOfRetail}
+                placeholder={String(settings.defaultBuyPctOfRetail)}
+              />
+              <Input label="Estimated Sale Price ($)" keyboardType="numeric" prefix="$" value={estimatedSalePrice} onChangeText={setEstimatedSalePrice} placeholder="300" />
               <Input label="Estimated Refurb Cost ($)" keyboardType="numeric" prefix="$" value={estimatedRefurbCost} onChangeText={setEstimatedRefurbCost} />
               <Input label="Estimated Labor Hours" keyboardType="numeric" value={estimatedLaborHours} onChangeText={setEstimatedLaborHours} />
             </CardContent>

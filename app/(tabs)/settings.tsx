@@ -191,6 +191,12 @@ export default function SettingsScreen() {
               onChangeText={(v) => updateSettings({ targetMarginPct: parseFloat(v) || 0 })}
             />
             <Input
+              label="Default Buy % of Retail (flips)"
+              keyboardType="numeric"
+              value={String(settings.defaultBuyPctOfRetail)}
+              onChangeText={(v) => updateSettings({ defaultBuyPctOfRetail: parseFloat(v) || 0 })}
+            />
+            <Input
               label="Hourly Labor Rate ($)"
               keyboardType="numeric"
               value={String(settings.hourlyLaborRate)}

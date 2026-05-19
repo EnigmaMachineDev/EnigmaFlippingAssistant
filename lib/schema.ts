@@ -42,6 +42,8 @@ export const ItemSchema = z.object({
 
   comps: z.array(CompEntrySchema),
 
+  targetMarginPct: z.number().min(0).max(100).optional(),
+
   notes: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -64,6 +66,9 @@ export const EvaluationSchema = z.object({
   listingUrl: z.string().optional(),
 
   askingPrice: z.number().min(0),
+
+  retailPrice: z.number().min(0).optional(),
+  targetBuyPctOfRetail: z.number().min(0).max(100).optional(),
 
   estimatedSalePrice: z.number().min(0),
   estimatedRefurbCost: z.number().min(0),
@@ -96,6 +101,7 @@ export const SettingsSchema = z.object({
   platformFees: z.array(PlatformFeeSchema),
   defaultPlatform: z.string().optional(),
   monthlyProfitGoal: z.number().min(0).optional(),
+  defaultBuyPctOfRetail: z.number().min(0).max(100),
   remindAfterListedDays: z.number().min(1),
   theme: z.literal("dark"),
   schemaVersion: z.number(),

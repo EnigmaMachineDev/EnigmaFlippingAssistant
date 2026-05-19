@@ -52,13 +52,14 @@ export function getRecommendedPrices(
 ): RecommendedPrices {
   const platform = findPlatformFee(settings, item.listedPlatform ?? settings.defaultPlatform);
   const totalCost = getTotalCost(item, settings.hourlyLaborRate);
+  const marginPct = item.targetMarginPct ?? settings.targetMarginPct;
 
   const minimum = listPriceForNet(
     totalCost + settings.minProfitFloor,
     platform
   );
 
-  const targetNet = totalCost / (1 - settings.targetMarginPct / 100);
+  const targetNet = totalCost / (1 - marginPct / 100);
   const recommended = listPriceForNet(targetNet, platform);
 
   let dream = recommended * 1.15;
@@ -151,12 +152,17 @@ export function getDashboardStats(
 
 // ─── Buy-side ────────────────────────────────────────────────────────────────
 
+function effectiveSalePrice(evaluation: Evaluation): number {
+  if (evaluation.estimatedSalePrice > 0) return evaluation.estimatedSalePrice;
+  return evaluation.retailPrice ?? 0;
+}
+
 export function getMaxBuyPrice(
   evaluation: Evaluation,
   settings: Settings
 ): number {
   const platform = findPlatformFee(settings, evaluation.intendedSellPlatform);
-  const netFromSale = netAfterFee(evaluation.estimatedSalePrice, platform);
+  const netFromSale = netAfterFee(effectiveSalePrice(evaluation), platform);
   const laborCost = evaluation.estimatedLaborHours * settings.hourlyLaborRate;
   const max =
     netFromSale -
@@ -170,16 +176,15 @@ export function getTargetBuyPrice(
   evaluation: Evaluation,
   settings: Settings
 ): number {
+  if (evaluation.retailPrice && evaluation.retailPrice > 0) {
+    const pct = evaluation.targetBuyPctOfRetail ?? settings.defaultBuyPctOfRetail;
+    return Math.round(evaluation.retailPrice * (pct / 100) * 100) / 100;
+  }
   const platform = findPlatformFee(settings, evaluation.intendedSellPlatform);
   const netFromSale = netAfterFee(evaluation.estimatedSalePrice, platform);
   const laborCost = evaluation.estimatedLaborHours * settings.hourlyLaborRate;
   const targetProfit = (evaluation.estimatedSalePrice * settings.targetMarginPct) / 100;
-  const target =
-    netFromSale -
-    evaluation.estimatedRefurbCost -
-    laborCost -
-    targetProfit;
-  return Math.round(target * 100) / 100;
+  return Math.round((netFromSale - evaluation.estimatedRefurbCost - laborCost - targetProfit) * 100) / 100;
 }
 
 export function getBuyVerdict(
@@ -189,7 +194,8 @@ export function getBuyVerdict(
   const maxBuy = getMaxBuyPrice(evaluation, settings);
   const targetBuy = getTargetBuyPrice(evaluation, settings);
   const platform = findPlatformFee(settings, evaluation.intendedSellPlatform);
-  const netFromSale = netAfterFee(evaluation.estimatedSalePrice, platform);
+  const salePriceForProjection = effectiveSalePrice(evaluation);
+  const netFromSale = netAfterFee(salePriceForProjection, platform);
   const laborCost = evaluation.estimatedLaborHours * settings.hourlyLaborRate;
   const projectedProfitAtAsking =
     Math.round(
@@ -205,6 +211,9 @@ export function getBuyVerdict(
       ? Math.round((projectedProfitAtAsking / netFromSale) * 1000) / 10
       : 0;
 
+  const retailMode = evaluation.retailPrice != null && evaluation.retailPrice > 0;
+  const buyPct = evaluation.targetBuyPctOfRetail ?? settings.defaultBuyPctOfRetail;
+
   let verdict: BuyVerdictResult["verdict"];
   let reasoning: string;
 
@@ -213,13 +222,25 @@ export function getBuyVerdict(
     reasoning = `Deal is dead at any price — even at $0 you'd only net $${(netFromSale - evaluation.estimatedRefurbCost - laborCost).toFixed(0)}, which is below your $${settings.minProfitFloor} floor.`;
   } else if (evaluation.askingPrice <= targetBuy) {
     verdict = "buy";
-    reasoning = `Asking price of $${evaluation.askingPrice} is at or below your target buy of $${targetBuy.toFixed(0)}. Expected profit: $${projectedProfitAtAsking.toFixed(0)}.`;
+    if (retailMode) {
+      reasoning = `Retail $${evaluation.retailPrice} × ${buyPct}% = target $${targetBuy.toFixed(0)}. Asking $${evaluation.askingPrice} is at or below target. Expected profit: $${projectedProfitAtAsking.toFixed(0)}.`;
+    } else {
+      reasoning = `Asking price of $${evaluation.askingPrice} is at or below your target buy of $${targetBuy.toFixed(0)}. Expected profit: $${projectedProfitAtAsking.toFixed(0)}.`;
+    }
   } else if (evaluation.askingPrice <= maxBuy) {
     verdict = "negotiate";
-    reasoning = `At $${evaluation.askingPrice} you'd net $${projectedProfitAtAsking.toFixed(0)} — above floor but below target. Try to get to $${targetBuy.toFixed(0)}.`;
+    if (retailMode) {
+      reasoning = `Retail $${evaluation.retailPrice} × ${buyPct}% = target $${targetBuy.toFixed(0)}. Asking $${evaluation.askingPrice} is above target — try to get to $${targetBuy.toFixed(0)}.`;
+    } else {
+      reasoning = `At $${evaluation.askingPrice} you'd net $${projectedProfitAtAsking.toFixed(0)} — above floor but below target. Try to get to $${targetBuy.toFixed(0)}.`;
+    }
   } else {
     verdict = "walk";
-    reasoning = `Asking $${evaluation.askingPrice} is above your max of $${maxBuy.toFixed(0)}. You'd lose $${Math.abs(projectedProfitAtAsking).toFixed(0)} after all costs.`;
+    if (retailMode) {
+      reasoning = `Retail $${evaluation.retailPrice} × ${buyPct}% = target $${targetBuy.toFixed(0)}. Asking $${evaluation.askingPrice} is above your max of $${maxBuy.toFixed(0)}.`;
+    } else {
+      reasoning = `Asking $${evaluation.askingPrice} is above your max of $${maxBuy.toFixed(0)}. You'd lose $${Math.abs(projectedProfitAtAsking).toFixed(0)} after all costs.`;
+    }
   }
 
   return {

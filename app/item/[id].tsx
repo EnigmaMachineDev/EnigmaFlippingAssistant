@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  ScrollView, View, Text, Pressable, Alert, TextInput,
+  ScrollView, View, Text, Pressable, Alert, TextInput, KeyboardAvoidingView, Platform,
 } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import {
@@ -132,6 +132,7 @@ export default function ItemDetailScreen() {
           ),
         }}
       />
+      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView className="flex-1 bg-background" contentContainerStyle={{ paddingBottom: 48 }}>
         <View className="px-4 pt-4 gap-4">
           {/* Header */}
@@ -260,7 +261,7 @@ export default function ItemDetailScreen() {
             <View className="gap-3">
               {nextStatus && nextStatus !== "sold" ? (
                 <Button onPress={advanceStatus}>
-                  Mark as {nextStatus.replace("_", " ")}
+                  {`Mark as ${nextStatus.replace("_", " ")}`}
                 </Button>
               ) : null}
               {nextStatus === "sold" || item.status === "listed" ? (
@@ -312,6 +313,7 @@ export default function ItemDetailScreen() {
           ) : null}
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
