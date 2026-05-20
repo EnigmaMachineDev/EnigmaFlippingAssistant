@@ -61,7 +61,7 @@ export async function exportJSON(
   settings: Settings
 ): Promise<void> {
   const json = serializeExport(buildExportData(items, evaluations, settings));
-  const filename = `fliplog-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  const filename = `yield-backup-${new Date().toISOString().slice(0, 10)}.json`;
   const path = `${FileSystem.cacheDirectory}${filename}`;
   await FileSystem.writeAsStringAsync(path, json, {
     encoding: FileSystem.EncodingType.UTF8,
@@ -121,7 +121,7 @@ export async function exportCSV(
     "\n\nEVALUATIONS\n" +
     [evalHeader, ...evalRows].join("\n");
 
-  const filename = `fliplog-export-${new Date().toISOString().slice(0, 10)}.csv`;
+  const filename = `yield-export-${new Date().toISOString().slice(0, 10)}.csv`;
   const path = `${FileSystem.cacheDirectory}${filename}`;
   await FileSystem.writeAsStringAsync(path, csv, {
     encoding: FileSystem.EncodingType.UTF8,
