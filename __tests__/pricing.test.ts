@@ -28,6 +28,7 @@ const baseSettings: Settings = {
 
 const baseItem: Item = {
   id: "item-1",
+  profileId: "test",
   kind: "flip",
   title: "Test Guitar",
   tags: [],
@@ -45,6 +46,7 @@ const baseItem: Item = {
 
 const baseEval: Evaluation = {
   id: "eval-1",
+  profileId: "test",
   title: "Test Eval",
   photos: [],
   askingPrice: 150,

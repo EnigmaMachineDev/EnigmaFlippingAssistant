@@ -22,6 +22,8 @@ export default function RootLayout() {
           headerShadowVisible: false,
         }}
       >
+        <Stack.Screen name="profiles" options={{ headerShown: false }} />
+        <Stack.Screen name="profile/new" options={{ title: "New Profile", presentation: "modal" }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="item/new" options={{ title: "New Item", presentation: "modal" }} />
         <Stack.Screen name="item/[id]" options={{ title: "Item" }} />
@@ -29,6 +31,7 @@ export default function RootLayout() {
         <Stack.Screen name="evaluate/new" options={{ title: "Evaluate a Buy", presentation: "modal" }} />
         <Stack.Screen name="evaluate/[id]" options={{ title: "Evaluation" }} />
         <Stack.Screen name="evaluate/[id]/edit" options={{ title: "Edit Evaluation", presentation: "modal" }} />
+        <Stack.Screen name="expenses" options={{ title: "Expenses", presentation: "modal" }} />
       </Stack>
       <StatusBar style="light" />
     </>

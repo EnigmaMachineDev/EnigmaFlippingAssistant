@@ -1,6 +1,6 @@
 import { createMMKV } from "react-native-mmkv";
 import type { MMKV } from "react-native-mmkv";
-import type { Item, Evaluation, Settings } from "./types";
+import type { Item, Evaluation, Settings, Profile, Expense, Product, ProductSale } from "./types";
 
 export const storage: MMKV = createMMKV({ id: "flip-ledger" });
 
@@ -8,6 +8,11 @@ const KEYS = {
   items: "flipLedger.items",
   evaluations: "flipLedger.evaluations",
   settings: "flipLedger.settings",
+  profiles: "flipLedger.profiles",
+  activeProfileId: "flipLedger.activeProfileId",
+  expenses: "flipLedger.expenses",
+  products: "flipLedger.products",
+  productSales: "flipLedger.productSales",
   schemaVersion: "flipLedger.schemaVersion",
   initialized: "flipLedger.initialized",
 } as const;
@@ -57,6 +62,47 @@ export const StorageService = {
 
   setSettings(settings: Settings): void {
     writeJSON(KEYS.settings, settings);
+  },
+
+  getProfiles(): Profile[] {
+    return readJSON<Profile[]>(KEYS.profiles, []);
+  },
+
+  setProfiles(profiles: Profile[]): void {
+    writeJSON(KEYS.profiles, profiles);
+  },
+
+  getActiveProfileId(): string | null {
+    return storage.getString(KEYS.activeProfileId) ?? null;
+  },
+
+  setActiveProfileId(id: string | null): void {
+    if (id) storage.set(KEYS.activeProfileId, id);
+    else storage.remove(KEYS.activeProfileId);
+  },
+
+  getExpenses(): Expense[] {
+    return readJSON<Expense[]>(KEYS.expenses, []);
+  },
+
+  setExpenses(expenses: Expense[]): void {
+    writeJSON(KEYS.expenses, expenses);
+  },
+
+  getProducts(): Product[] {
+    return readJSON<Product[]>(KEYS.products, []);
+  },
+
+  setProducts(products: Product[]): void {
+    writeJSON(KEYS.products, products);
+  },
+
+  getProductSales(): ProductSale[] {
+    return readJSON<ProductSale[]>(KEYS.productSales, []);
+  },
+
+  setProductSales(sales: ProductSale[]): void {
+    writeJSON(KEYS.productSales, sales);
   },
 
   getSchemaVersion(): number {

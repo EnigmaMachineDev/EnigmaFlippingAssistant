@@ -7,6 +7,7 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
+import { useRouter } from "expo-router";
 import {
   Download,
   Upload,
@@ -15,6 +16,8 @@ import {
   Pencil,
   Save,
   X,
+  ChevronRight,
+  Users,
 } from "lucide-react-native";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -22,6 +25,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Section } from "@/components/ui/Section";
 import { useSettings, useSettingsActions } from "@/hooks/useSettings";
 import { useStore } from "@/lib/store";
+import { useActiveProfile } from "@/hooks/useProfile";
 import { useItems } from "@/hooks/useItems";
 import { useEvaluations } from "@/hooks/useEvaluations";
 import { exportJSON, exportCSV, readImportFile } from "@/lib/importExport";
@@ -34,6 +38,8 @@ function uuid() {
 }
 
 export default function SettingsScreen() {
+  const router = useRouter();
+  const profile = useActiveProfile();
   const settings = useSettings();
   const { updateSettings } = useSettingsActions();
   const items = useItems();
@@ -173,6 +179,21 @@ export default function SettingsScreen() {
       <View className="px-4 pt-6 pb-2">
         <Text className="text-2xl font-bold text-foreground">Settings</Text>
       </View>
+
+      {/* Profile */}
+      <Section title="Profile" className="mt-6">
+        <Pressable
+          onPress={() => router.push("/profiles" as any)}
+          className="mx-4 flex-row items-center gap-3 p-4 rounded-lg border border-border bg-card"
+        >
+          <Text className="text-2xl">{profile?.emoji ?? "🏷️"}</Text>
+          <View className="flex-1">
+            <Text className="text-sm font-semibold text-foreground">{profile?.name ?? "Profile"}</Text>
+            <Text className="text-xs text-muted-foreground capitalize">{profile?.kind ?? "flip"} profile</Text>
+          </View>
+          <ChevronRight size={16} color={Colors.muted} />
+        </Pressable>
+      </Section>
 
       {/* Pricing rules */}
       <Section title="Pricing Rules" className="mt-6">

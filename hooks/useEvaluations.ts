@@ -1,7 +1,7 @@
 import { useStore } from "@/lib/store";
 
 export function useEvaluations() {
-  return useStore((s) => s.evaluations);
+  return useStore((s) => s.evaluations.filter((e) => e.profileId === s.activeProfileId));
 }
 
 export function useEvaluation(id: string) {
@@ -9,7 +9,9 @@ export function useEvaluation(id: string) {
 }
 
 export function usePendingEvaluations() {
-  return useStore((s) => s.evaluations.filter((e) => e.outcome === "pending"));
+  return useStore((s) =>
+    s.evaluations.filter((e) => e.profileId === s.activeProfileId && e.outcome === "pending")
+  );
 }
 
 export function useEvaluationActions() {

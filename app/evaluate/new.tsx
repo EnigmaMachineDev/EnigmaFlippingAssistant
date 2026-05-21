@@ -18,6 +18,7 @@ export default function NewEvaluationScreen() {
   const router = useRouter();
   const addEvaluation = useStore((s) => s.addEvaluation);
   const addItem = useStore((s) => s.addItem);
+  const activeProfileId = useStore((s) => s.activeProfileId) ?? "";
   const settings = useSettings();
 
   const [title, setTitle] = useState("");
@@ -41,6 +42,7 @@ export default function NewEvaluationScreen() {
     if (isNaN(asking) || !title.trim() || (!hasRetail && !hasSale)) return null;
     return {
       id: "preview",
+      profileId: activeProfileId,
       title: title.trim(),
       photos: [],
       askingPrice: asking,
@@ -74,6 +76,7 @@ export default function NewEvaluationScreen() {
     if (!hasRetail && !hasSale) { setError("Enter retail price or estimated sale price"); return; }
     setError("");
     addEvaluation({
+      profileId: activeProfileId,
       title: title.trim(),
       source: source.trim() || undefined,
       listingUrl: listingUrl.trim() || undefined,
@@ -102,6 +105,7 @@ export default function NewEvaluationScreen() {
     if (isNaN(asking)) { setError("Enter asking price"); return; }
     setError("");
     const ev = addEvaluation({
+      profileId: activeProfileId,
       title: title.trim(),
       source: source.trim() || undefined,
       listingUrl: listingUrl.trim() || undefined,
@@ -118,6 +122,7 @@ export default function NewEvaluationScreen() {
       outcome: "bought",
     });
     const item = addItem({
+      profileId: activeProfileId,
       kind: "flip",
       title: title.trim(),
       tags: [],

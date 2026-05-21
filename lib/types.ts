@@ -3,6 +3,8 @@ export type ItemKind = "flip" | "build";
 export type EvaluationOutcome = "pending" | "bought" | "walked" | "lost_to_other_buyer";
 export type BuyVerdict = "buy" | "negotiate" | "walk";
 export type CostKind = "materials" | "labor" | "fee" | "shipping" | "other";
+export type ProfileKind = "flip" | "catalog";
+export type ExpenseKind = "supplies" | "tools" | "fees" | "other";
 
 export interface CostEntry {
   id: string;
@@ -22,6 +24,7 @@ export interface CompEntry {
 
 export interface Item {
   id: string;
+  profileId: string;
   kind: ItemKind;
   title: string;
   category?: string;
@@ -63,6 +66,7 @@ export interface OfferEntry {
 
 export interface Evaluation {
   id: string;
+  profileId: string;
   title: string;
   category?: string;
   photos: string[];
@@ -110,6 +114,58 @@ export interface Settings {
   theme: "dark";
   schemaVersion: number;
 }
+
+// ─── Profiles ────────────────────────────────────────────────────────────────
+
+export interface Profile {
+  id: string;
+  name: string;
+  emoji: string;
+  kind: ProfileKind;
+  settings: Settings;
+  createdAt: string;
+}
+
+// ─── Expenses (overhead costs per profile) ───────────────────────────────────
+
+export interface Expense {
+  id: string;
+  profileId: string;
+  label: string;
+  amount: number;
+  kind: ExpenseKind;
+  addedAt: string;
+  note?: string;
+}
+
+// ─── Catalog products (catalog profiles only) ────────────────────────────────
+
+export interface Product {
+  id: string;
+  profileId: string;
+  title: string;
+  description?: string;
+  tags: string[];
+  unitCost: number;
+  defaultListPrice: number;
+  defaultPlatform?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductSale {
+  id: string;
+  productId: string;
+  profileId: string;
+  quantity: number;
+  pricePerUnit: number;
+  platform: string;
+  soldAt: string;
+  note?: string;
+}
+
+// ─── Computed / result types ──────────────────────────────────────────────────
 
 export interface DateRange {
   start: string;

@@ -6,7 +6,6 @@ import type {
   DateRange,
   RecommendedPrices,
   BuyVerdictResult,
-  CounterOfferSuggestion,
   DashboardStats,
   ProspectStats,
 } from "./types";

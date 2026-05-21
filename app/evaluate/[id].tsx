@@ -77,6 +77,7 @@ export default function EvaluationDetailScreen() {
             ? lastOffer.amount
             : evaluation.askingPrice;
           const item = addItem({
+            profileId: evaluation.profileId,
             kind: "flip",
             title: evaluation.title,
             tags: [],

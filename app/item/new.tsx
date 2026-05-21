@@ -17,6 +17,7 @@ const STATUS_OPTIONS: ItemStatus[] = ["sourcing", "acquired", "in_progress", "li
 export default function NewItemScreen() {
   const router = useRouter();
   const addItem = useStore((s) => s.addItem);
+  const activeProfileId = useStore((s) => s.activeProfileId) ?? "";
   const settings = useSettings();
 
   const [kind, setKind] = useState<ItemKind>("flip");
@@ -37,6 +38,7 @@ export default function NewItemScreen() {
     }
     setError("");
     addItem({
+      profileId: activeProfileId,
       kind,
       title: title.trim(),
       category: category.trim() || undefined,

@@ -18,6 +18,7 @@ export const CompEntrySchema = z.object({
 
 export const ItemSchema = z.object({
   id: z.string(),
+  profileId: z.string().optional(),
   kind: z.enum(["flip", "build"]),
   title: z.string().min(1, "Title required"),
   category: z.string().optional(),
@@ -59,6 +60,7 @@ export const OfferEntrySchema = z.object({
 
 export const EvaluationSchema = z.object({
   id: z.string(),
+  profileId: z.string().optional(),
   title: z.string().min(1, "Title required"),
   category: z.string().optional(),
   photos: z.array(z.string()),

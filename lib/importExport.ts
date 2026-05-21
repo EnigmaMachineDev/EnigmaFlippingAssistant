@@ -41,7 +41,7 @@ export function parseImportJSON(text: string): ImportPreview {
       items: validated.data.items.length,
       evaluations: validated.data.evaluations.length,
       valid: true,
-      data: validated.data,
+      data: validated.data as unknown as ExportData,
     };
   } catch (e: unknown) {
     return {

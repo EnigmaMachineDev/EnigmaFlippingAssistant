@@ -43,6 +43,7 @@ const baseSettings: Settings = {
 
 const item1: Item = {
   id: "item-1",
+  profileId: "test",
   kind: "flip",
   title: "1978 Fender Stratocaster",
   category: "Guitar",
@@ -70,6 +71,7 @@ const item1: Item = {
 
 const item2: Item = {
   id: "item-2",
+  profileId: "test",
   kind: "build",
   title: "Walnut Charcuterie Board",
   category: "Woodwork",
@@ -89,6 +91,7 @@ const item2: Item = {
 
 const eval1: Evaluation = {
   id: "eval-1",
+  profileId: "test",
   title: "1965 Silvertone 1457",
   photos: [],
   source: "Facebook Marketplace",
