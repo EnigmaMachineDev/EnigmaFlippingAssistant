@@ -5,7 +5,6 @@ import {
   getRecommendedPrices,
   getRealizedProfit,
   getBuyVerdict,
-  suggestCounterOffer,
   getInventoryValue,
   getDashboardStats,
 } from "@/lib/pricing";
@@ -23,10 +22,7 @@ export function useItemPricing(item: Item) {
 export function useEvaluationVerdict(evaluation: Evaluation) {
   const settings = useSettings();
   return useMemo(
-    () => ({
-      verdict: getBuyVerdict(evaluation, settings),
-      counter: suggestCounterOffer(evaluation, settings),
-    }),
+    () => ({ verdict: getBuyVerdict(evaluation, settings) }),
     [evaluation, settings]
   );
 }

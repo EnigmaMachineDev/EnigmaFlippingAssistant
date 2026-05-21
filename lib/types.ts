@@ -131,11 +131,6 @@ export interface BuyVerdictResult {
   reasoning: string;
 }
 
-export interface CounterOfferSuggestion {
-  amount: number;
-  rationale: string;
-}
-
 export interface DashboardStats {
   totalSold: number;
   totalProfit: number;

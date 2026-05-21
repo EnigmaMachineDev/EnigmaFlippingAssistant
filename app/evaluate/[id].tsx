@@ -3,7 +3,7 @@ import {
   ScrollView, View, Text, Pressable, Alert, TextInput,
 } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
-import { Plus, Pencil, Trash2, Lightbulb } from "lucide-react-native";
+import { Plus, Pencil, Trash2 } from "lucide-react-native";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { VerdictPanel } from "@/components/pricing/VerdictPanel";
@@ -12,7 +12,7 @@ import { Section } from "@/components/ui/Section";
 import { useEvaluation } from "@/hooks/useEvaluations";
 import { useStore } from "@/lib/store";
 import { useSettings } from "@/hooks/useSettings";
-import { getBuyVerdict, suggestCounterOffer } from "@/lib/pricing";
+import { getBuyVerdict } from "@/lib/pricing";
 import { formatCurrency, formatDate, nowISO } from "@/lib/format";
 import { Colors } from "@/constants/colors";
 import type { EvaluationOutcome } from "@/lib/types";
@@ -34,8 +34,6 @@ export default function EvaluationDetailScreen() {
   const [offerBy, setOfferBy] = useState<"me" | "seller">("me");
   const [offerAmount, setOfferAmount] = useState("");
   const [offerNote, setOfferNote] = useState("");
-  const [showCounter, setShowCounter] = useState(false);
-
   if (!evaluation) {
     return (
       <View className="flex-1 bg-background items-center justify-center">
@@ -45,7 +43,6 @@ export default function EvaluationDetailScreen() {
   }
 
   const verdict = getBuyVerdict(evaluation, settings);
-  const counter = suggestCounterOffer(evaluation, settings);
 
   const logOffer = () => {
     const amount = parseFloat(offerAmount);
@@ -148,26 +145,6 @@ export default function EvaluationDetailScreen() {
               {evaluation.source ? <Row label="Source" value={evaluation.source} /> : null}
             </CardContent>
           </Card>
-
-          {/* Counter suggestion */}
-          <Pressable
-            onPress={() => setShowCounter((v) => !v)}
-            className="flex-row items-center gap-2 px-4 py-3 rounded-lg border border-border bg-card"
-          >
-            <Lightbulb size={16} color={Colors.warning} />
-            <Text className="text-sm font-medium text-foreground flex-1">
-              Suggested counter: {counter.amount > 0 ? formatCurrency(counter.amount) : "No viable counter"}
-            </Text>
-          </Pressable>
-          {showCounter ? (
-            <Card>
-              <CardContent className="pt-4">
-                <Text className="text-sm text-muted-foreground leading-relaxed">
-                  {counter.rationale}
-                </Text>
-              </CardContent>
-            </Card>
-          ) : null}
 
           {/* Offers timeline */}
           <Section

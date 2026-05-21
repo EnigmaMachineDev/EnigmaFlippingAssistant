@@ -6,7 +6,6 @@ import {
   getMaxBuyPrice,
   getTargetBuyPrice,
   getBuyVerdict,
-  suggestCounterOffer,
 } from "../lib/pricing";
 import type { Item, Evaluation, Settings } from "../lib/types";
 
@@ -278,24 +277,3 @@ describe("getBuyVerdict", () => {
   });
 });
 
-// ─── suggestCounterOffer ─────────────────────────────────────────────────────
-
-describe("suggestCounterOffer", () => {
-  it("suggests below target buy price", () => {
-    const target = getTargetBuyPrice(baseEval, baseSettings);
-    const { amount } = suggestCounterOffer(baseEval, baseSettings);
-    expect(amount).toBeLessThanOrEqual(target);
-    expect(amount).toBeGreaterThan(0);
-  });
-
-  it("returns zero and rationale for impossible deals", () => {
-    const impossibleEval: Evaluation = {
-      ...baseEval,
-      estimatedSalePrice: 50,
-      estimatedRefurbCost: 40,
-      estimatedLaborHours: 4,
-    };
-    const { amount } = suggestCounterOffer(impossibleEval, baseSettings);
-    expect(amount).toBe(0);
-  });
-});

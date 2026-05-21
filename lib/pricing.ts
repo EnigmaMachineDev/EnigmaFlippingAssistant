@@ -253,25 +253,6 @@ export function getBuyVerdict(
   };
 }
 
-export function suggestCounterOffer(
-  evaluation: Evaluation,
-  settings: Settings
-): CounterOfferSuggestion {
-  const targetBuy = getTargetBuyPrice(evaluation, settings);
-
-  if (targetBuy <= 0) {
-    return {
-      amount: 0,
-      rationale: "No viable counter — this deal doesn't pencil out.",
-    };
-  }
-
-  const counter = Math.max(Math.round(targetBuy * 0.9 * 2) / 2, 1);
-  const rationale = `Starting at $${counter} leaves room for the seller to counter at $${targetBuy.toFixed(0)} — your true target.`;
-
-  return { amount: counter, rationale };
-}
-
 export function getProspectStats(
   evaluations: Evaluation[],
   range: DateRange
