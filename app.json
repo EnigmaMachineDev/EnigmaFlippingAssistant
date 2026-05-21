@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Yield",
-    "slug": "yield",
+    "slug": "fliplog",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -55,6 +55,7 @@
       "eas": {
         "projectId": "84496977-90e4-4bdb-a3cf-cb3aeb29cfff"
       }
-    }
+    },
+    "owner": "enigmamachinedev"
   }
 }
