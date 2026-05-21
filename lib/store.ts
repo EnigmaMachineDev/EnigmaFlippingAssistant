@@ -410,3 +410,8 @@ export const useStore = create<AppState>((set, get) => ({
     set({ items, evaluations, profiles: profiles2 });
   },
 }));
+
+// Initialize synchronously on module load so all state is ready before the
+// first render. Calling set() outside React is safe in Zustand; subscribers
+// will see the fully-initialized state on their first read.
+useStore.getState().initialize();

@@ -1,16 +1,9 @@
 import "../global.css";
-import React, { useEffect } from "react";
+import React from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useStore } from "@/lib/store";
 
 export default function RootLayout() {
-  const initialize = useStore((s) => s.initialize);
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
   return (
     <>
       <Stack

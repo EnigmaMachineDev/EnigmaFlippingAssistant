@@ -40,7 +40,8 @@ export function formatRelative(iso: string): string {
 
 export function daysBetween(startIso: string, endIso: string): number {
   try {
-    return Math.abs(differenceInDays(new Date(endIso), new Date(startIso)));
+    const result = Math.abs(differenceInDays(new Date(endIso), new Date(startIso)));
+    return isNaN(result) ? 0 : result;
   } catch {
     return 0;
   }
