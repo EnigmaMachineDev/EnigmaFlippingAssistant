@@ -412,6 +412,10 @@ export const useStore = create<AppState>((set, get) => ({
 }));
 
 // Initialize synchronously on module load so all state is ready before the
-// first render. Calling set() outside React is safe in Zustand; subscribers
-// will see the fully-initialized state on their first read.
-useStore.getState().initialize();
+// first render. Wrapped in try/catch so a MMKV failure doesn't propagate as
+// an uncaught module-eval exception and crash the process.
+try {
+  useStore.getState().initialize();
+} catch (e) {
+  console.error("[store] initialization failed:", e);
+}

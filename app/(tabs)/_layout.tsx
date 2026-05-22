@@ -6,9 +6,11 @@ import { useStore } from "@/lib/store";
 import { useActiveProfile } from "@/hooks/useProfile";
 
 export default function TabLayout() {
+  const initialized = useStore((s) => s.initialized);
   const activeProfileId = useStore((s) => s.activeProfileId);
   const profile = useActiveProfile();
 
+  if (!initialized) return null;
   if (!activeProfileId) return <Redirect href="/profiles" />;
 
   const isCatalog = profile?.kind === "catalog";
