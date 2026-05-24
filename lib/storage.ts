@@ -2,7 +2,21 @@ import { createMMKV } from "react-native-mmkv";
 import type { MMKV } from "react-native-mmkv";
 import type { Item, Evaluation, Settings, Profile, Expense, Product, ProductSale } from "./types";
 
-export const storage: MMKV = createMMKV({ id: "flip-ledger" });
+// Lazy MMKV: creating a Nitro HybridObject at JS module-eval time can crash
+// the native side before its registration is finished. Defer until the first
+// storage call, which runs from inside React after the bridge is ready.
+let _storage: MMKV | null = null;
+function mmkv(): MMKV {
+  if (_storage == null) _storage = createMMKV({ id: "flip-ledger" });
+  return _storage;
+}
+export const storage: MMKV = new Proxy({} as MMKV, {
+  get(_t, prop) {
+    const target = mmkv() as any;
+    const value = target[prop];
+    return typeof value === "function" ? value.bind(target) : value;
+  },
+}) as MMKV;
 
 const KEYS = {
   items: "flipLedger.items",
